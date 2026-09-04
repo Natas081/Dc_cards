@@ -1,8 +1,40 @@
+import { circle, radialGradient } from 'motion/react-client'
 import './Card.css'
-import { useState } from 'react'
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useMotionTemplate
+} from 'motion/react'
 
 function Card({ frontImage, hiddenImage, alt = 'Interactive card' }) {
-  const [position, setPosition] = useState({ x: 50, y: 50 })
+  const mouseX = useMotionValue(50)
+  const mouseY = useMotionValue(50)
+
+  const smoothX = useSpring(mouseX, {
+    stiffness: 300, damping: 30, mass: 0.4
+  })
+
+    const smoothY = useSpring(mouseY, {
+    stiffness: 300, damping: 30, mass: 0.4
+  })
+  const revealRadius = useMotionValue(0)
+  const smoothRadius = useSpring(revealRadius, {
+    stiffness: 260,
+    damping: 28,
+    mass: 0.5
+  })
+
+  const maskImage = useMotionTemplate` 
+  radial-gradient(
+    circle ${smoothRadius}px at ${smoothX}% ${smoothY}%,
+    black 0%, 
+    black 70%,
+    transparent 100%
+  )
+    `
+    
+
 
   function handleMouseMove(event) {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -10,13 +42,25 @@ function Card({ frontImage, hiddenImage, alt = 'Interactive card' }) {
     const x = ((event.clientX - rect.left) / rect.width) * 100
     const y = ((event.clientY - rect.top) / rect.height) * 100
 
-    setPosition({ x, y })
+    mouseX.set(x)
+    mouseY.set(y)
+  }
+
+  function handlerMouseEnter() {
+    revealRadius.set(90)
+
+  }
+
+  function handlerMouseLeave() {
+    revealRadius.set(0)
   }
 
   return (
     <article
       className="card"
       onMouseMove={handleMouseMove}
+      onMouseEnter={handlerMouseEnter}
+      onMouseLeave={handlerMouseLeave}
     >
       <div className="card__scene">
         <div className="card__layer card__layer--front">
@@ -27,11 +71,11 @@ function Card({ frontImage, hiddenImage, alt = 'Interactive card' }) {
           />
         </div>
 
-        <div
+        <motion.div
           className="card__layer card__layer--hidden"
           style={{
-            '--mouse-x': `${position.x}%`,
-            '--mouse-y': `${position.y}%`,
+            maskImage,
+            WebkitMaskImage: maskImage
           }}
         >
           <img
@@ -40,7 +84,7 @@ function Card({ frontImage, hiddenImage, alt = 'Interactive card' }) {
             className="card__image"
             aria-hidden="true"
           />
-        </div>
+        </motion.div>
       </div>
     </article>
   )
