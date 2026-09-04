@@ -28,8 +28,20 @@
 
 .card__layer--hidden {
   z-index: 2;
-  opacity: 0;
+  mask-image: radial-gradient(
+    circle 90px at var(--mouse-x) var(--mouse-y), 
+    black 0%,
+    black 70%,
+    transparent 100%
+ );
+
+ -webkit-mask-image: radial-gradient(circle 90px at var(--mouse-x) var(--mouse-y),
+ black 0%,
+ black 70%,
+ transparent 100%
+ );
 }
+
 
 .card__image {
   display: block;

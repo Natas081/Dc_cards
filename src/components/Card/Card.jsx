@@ -1,10 +1,24 @@
 import './Card.css'
+import { useState } from 'react'
 
 function Card({ frontImage, hiddenImage, alt = 'Interactive card' }) {
-  return (
-    <article className="card">
-      <div className="card__scene">
+  const [position, setPosition] = useState({ x: 50, y: 50 })
 
+  function handleMouseMove(event) {
+    const rect = event.currentTarget.getBoundingClientRect()
+
+    const x = ((event.clientX - rect.left) / rect.width) * 100
+    const y = ((event.clientY - rect.top) / rect.height) * 100
+
+    setPosition({ x, y })
+  }
+
+  return (
+    <article
+      className="card"
+      onMouseMove={handleMouseMove}
+    >
+      <div className="card__scene">
         <div className="card__layer card__layer--front">
           <img
             src={frontImage}
@@ -13,7 +27,13 @@ function Card({ frontImage, hiddenImage, alt = 'Interactive card' }) {
           />
         </div>
 
-        <div className="card__layer card__layer--hidden">
+        <div
+          className="card__layer card__layer--hidden"
+          style={{
+            '--mouse-x': `${position.x}%`,
+            '--mouse-y': `${position.y}%`,
+          }}
+        >
           <img
             src={hiddenImage}
             alt=""
@@ -21,7 +41,6 @@ function Card({ frontImage, hiddenImage, alt = 'Interactive card' }) {
             aria-hidden="true"
           />
         </div>
-
       </div>
     </article>
   )
