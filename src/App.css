@@ -1,6 +1,10 @@
 .app {
   min-height: 100vh;
+
   display: grid;
   place-items: center;
+
   padding: 40px;
+
+  perspective: 1200px;
 }
