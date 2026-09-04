@@ -1,0 +1,41 @@
+.card {
+  width: 420px;
+  max-width: 90vw;
+
+  aspect-ratio: 1086 / 1396;
+
+  flex-shrink: 0;
+}
+
+.card__scene {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.card__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.card__layer--front {
+  z-index: 1;
+}
+
+.card__layer--hidden {
+  z-index: 2;
+  opacity: 0;
+}
+
+.card__image {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
